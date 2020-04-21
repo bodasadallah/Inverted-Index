@@ -18,10 +18,12 @@ class mainFrame : public wxFrame
 	wxStaticText* path_text= nullptr;
 	wxStaticText* search_text= nullptr;
 	wxButton* clear_button = nullptr;
+	wxButton* browse_button = nullptr;
 
 	void on_index_button_clicked(wxCommandEvent &event);
 	void on_search_button_clicked(wxCommandEvent &event);
 	void on_clear_button_clicked(wxCommandEvent &event);
+	void on_browse_button_clicked(wxCommandEvent &event);
 
 
 	wxDECLARE_EVENT_TABLE();

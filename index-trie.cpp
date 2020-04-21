@@ -66,18 +66,12 @@ void trie::store_trie(string file_path, string word, json &j)
 		}
 		json js(mp);
 		j[word] = js;
-
-		return;
 	}
-
-	else
+	for (auto child : children)
 	{
-		for (auto child : children)
-		{
 
-			trie *sub_trie = &child.second;
+		trie *sub_trie = &child.second;
 
-			sub_trie->store_trie(file_path, word + child.first, j);
-		}
+		sub_trie->store_trie(file_path, word + child.first, j);
 	}
 }
