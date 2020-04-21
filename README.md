@@ -20,3 +20,10 @@ extended-ideas
 -------
 * update the database file is a new file is added to input directory
 * add functionality to such for mutiple words using AND and OR operators
+
+Functions
+---------
+* trie::add_word : adds word into trie
+* trie::get_word_stats : return files that has this word, and the word freq in each file
+* trie::store_trie : store the trie in json and txt file
+* read_from_json : read from json file, and return map<vector<pair<string,int>>>
