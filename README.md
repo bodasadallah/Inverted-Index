@@ -1,7 +1,9 @@
 # Inverted-Index
 Main purpose of this project is to build an inverted index.
 
-As for now, this application works only on linux systems.You can just run the Inverted-Index.out or Inverted-Index.exe.The app would create "Database" directory in the application directory, and would save the indexing files in it. 
+As for now, this application works only on linux systems.You can just run the Inverted-Index.out or Inverted-Index.exe.The app would create "Database" directory in the application directory, and would save the indexing files in it.
+If this folder were indexed before, then the app would use the json file and won't index it again.
+If you want to look at the full database see inputFileName.txt in the Database directory.
 
 Depenendies
 -----------
