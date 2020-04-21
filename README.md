@@ -1,12 +1,14 @@
 # Inverted-Index
 Main purpose of this project is to build an inverted index.
 
-
+As for now, this application works only on linux systems.You can just run the Inverted-Index.out or Inverted-Index.exe.The app would create "Database" directory in the application directory, and would save the indexing files in it. 
 
 Depenendies
 -----------
-* wxWidgets 
-* json.hpp 
+If you want to compile the application you would need these: 
+
+* wxWidgets (Follow this guide [here](https://wiki.wxwidgets.org/Installing_and_configuring_under_Ubuntu))
+* json.hpp (this is already included in this repo.)
 
 Operation
 -------
