@@ -87,7 +87,7 @@ void mainFrame::on_browse_button_clicked(wxCommandEvent &event)
 	// proceed loading the file chosen by the user;
 	// this can be done with e.g. wxWidgets input streams:
 	string input_path = (string)openFileDialog.GetPath();
-	input_path = input_path.substr(0, input_path.find_last_of('/') + 1);
+	input_path = input_path.substr(0, input_path.find_last_of('/') );
 	path_textbox->SetValue(input_path);
 }
 
@@ -96,8 +96,13 @@ void mainFrame::on_index_button_clicked(wxCommandEvent &event)
 
 	// path for the input folder, later this would be entered in text_box by user
 	string input_path = (string)path_textbox->GetValue();
+	if(input_path.size() ==0 ){
+		status_text->SetLabel("Please Enter the input folder path!");
+		return;
+	}
 	trie myTrie;									// create a tire wich would build our index
-	vector<string> words;								// vector of all words in the doucments, used to insert them into the trie
+	vector<string> words;
+											// vector of all words in the doucments, used to insert them into the trie
 	string input_folder_name = input_path.substr(input_path.find_last_of('/') + 1); // get's the input folder nam
 	bool already_indexed = 0;
 	for (auto file : fs::directory_iterator(DATA_BASE_PATH))
