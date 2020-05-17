@@ -24,7 +24,7 @@ class mainFrame : public wxFrame
 	void on_search_button_clicked(wxCommandEvent &event);
 	void on_clear_button_clicked(wxCommandEvent &event);
 	void on_browse_button_clicked(wxCommandEvent &event);
-
+	void on_item_clicked(wxCommandEvent &event);
 
 	wxDECLARE_EVENT_TABLE();
 };

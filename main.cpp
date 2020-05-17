@@ -20,6 +20,7 @@ wxBEGIN_EVENT_TABLE(mainFrame, wxFrame)
 	EVT_BUTTON(SEARCH_BUTTON_ID, mainFrame::on_search_button_clicked)
 	EVT_BUTTON(CLEAR_BUTTON_ID, mainFrame::on_clear_button_clicked)
 	EVT_BUTTON(BROWSE_BUTTON_ID, mainFrame::on_browse_button_clicked)
+	EVT_LISTBOX_DCLICK(RESULT_LIST_ID,mainFrame::on_item_clicked)
 wxEND_EVENT_TABLE()
 
 std::string getexepath()
@@ -74,6 +75,17 @@ map<string, vector<pair<string, int>>> read_from_json(string file_path)
 
 	i.close();
 	return mp;
+}
+
+
+void mainFrame::on_item_clicked(wxCommandEvent &event){
+
+	string file_path  = (string)result_list -> GetString(result_list-> GetSelection()) ;
+	file_path = file_path.substr( file_path.find('/'));
+	string cmd = "gedit " + file_path;
+	wxExecute(cmd);
+
+
 }
 
 void mainFrame::on_browse_button_clicked(wxCommandEvent &event)
