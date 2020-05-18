@@ -20,11 +20,13 @@ class mainFrame : public wxFrame
 	wxButton* clear_button = nullptr;
 	wxButton* browse_button = nullptr;
 
+
 	void on_index_button_clicked(wxCommandEvent &event);
 	void on_search_button_clicked(wxCommandEvent &event);
 	void on_clear_button_clicked(wxCommandEvent &event);
 	void on_browse_button_clicked(wxCommandEvent &event);
 	void on_item_clicked(wxCommandEvent &event);
+	bool is_indexed();
 
 	wxDECLARE_EVENT_TABLE();
 };

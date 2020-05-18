@@ -11,6 +11,7 @@ using json = nlohmann::json;
 
 using namespace std;
 
+trie myTrie;
 namespace fs = std::filesystem;
 string DATA_BASE_PATH;
 wxBEGIN_EVENT_TABLE(mainFrame, wxFrame)
@@ -18,12 +19,12 @@ wxBEGIN_EVENT_TABLE(mainFrame, wxFrame)
     //EVT_BUTTON(1001,OnButtonClicked)
     EVT_BUTTON(INDEX_BUTTON_ID, mainFrame::on_index_button_clicked)
 	EVT_BUTTON(SEARCH_BUTTON_ID, mainFrame::on_search_button_clicked)
-	EVT_BUTTON(CLEAR_BUTTON_ID, mainFrame::on_clear_button_clicked)
-	EVT_BUTTON(BROWSE_BUTTON_ID, mainFrame::on_browse_button_clicked)
-	EVT_LISTBOX_DCLICK(RESULT_LIST_ID,mainFrame::on_item_clicked)
-wxEND_EVENT_TABLE()
+	    EVT_BUTTON(CLEAR_BUTTON_ID, mainFrame::on_clear_button_clicked)
+		EVT_BUTTON(BROWSE_BUTTON_ID, mainFrame::on_browse_button_clicked)
+		    EVT_LISTBOX_DCLICK(RESULT_LIST_ID, mainFrame::on_item_clicked)
+			wxEND_EVENT_TABLE()
 
-std::string getexepath()
+			    std::string getexepath()
 {
 	char result[PATH_MAX];
 	ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
@@ -77,15 +78,13 @@ map<string, vector<pair<string, int>>> read_from_json(string file_path)
 	return mp;
 }
 
+void mainFrame::on_item_clicked(wxCommandEvent &event)
+{
 
-void mainFrame::on_item_clicked(wxCommandEvent &event){
-
-	string file_path  = (string)result_list -> GetString(result_list-> GetSelection()) ;
-	file_path = file_path.substr( file_path.find('/'));
+	string file_path = (string)result_list->GetString(result_list->GetSelection());
+	file_path = file_path.substr(file_path.find('/'));
 	string cmd = "gedit " + file_path;
 	wxExecute(cmd);
-
-
 }
 
 void mainFrame::on_browse_button_clicked(wxCommandEvent &event)
@@ -99,22 +98,15 @@ void mainFrame::on_browse_button_clicked(wxCommandEvent &event)
 	// proceed loading the file chosen by the user;
 	// this can be done with e.g. wxWidgets input streams:
 	string input_path = (string)openFileDialog.GetPath();
-	input_path = input_path.substr(0, input_path.find_last_of('/') );
+	input_path = input_path.substr(0, input_path.find_last_of('/'));
 	path_textbox->SetValue(input_path);
 }
 
-void mainFrame::on_index_button_clicked(wxCommandEvent &event)
+bool mainFrame::is_indexed()
 {
-
-	// path for the input folder, later this would be entered in text_box by user
 	string input_path = (string)path_textbox->GetValue();
-	if(input_path.size() ==0 ){
-		status_text->SetLabel("Please Enter the input folder path!");
-		return;
-	}
-	trie myTrie;									// create a tire wich would build our index
-	vector<string> words;
-											// vector of all words in the doucments, used to insert them into the trie
+
+	// vector of all words in the doucments, used to insert them into the trie
 	string input_folder_name = input_path.substr(input_path.find_last_of('/') + 1); // get's the input folder nam
 	bool already_indexed = 0;
 	for (auto file : fs::directory_iterator(DATA_BASE_PATH))
@@ -125,12 +117,34 @@ void mainFrame::on_index_button_clicked(wxCommandEvent &event)
 			already_indexed = 1;
 	}
 
+	return already_indexed;
+}
+
+void mainFrame::on_index_button_clicked(wxCommandEvent &event)
+{
+
+	status_text->SetLabel("");
+	// path for the input folder, later this would be entered in text_box by user
+	string input_path = (string)path_textbox->GetValue();
+	string input_folder_name = input_path.substr(input_path.find_last_of('/') + 1);
+	if (input_path.size() == 0)
+	{
+		status_text->SetLabel("Please Enter the input folder path!");
+		return;
+	}
+	// create a tire wich would build our index
+	vector<string> words;
+	// vector of all words in the doucments, used to insert them into the trie
+	bool already_indexed = is_indexed();
+
 	if (already_indexed)
+	{
 		status_text->SetLabel("This Folder is already Indexed");
-	else
-		status_text->SetLabel("Indexing Folder!!!!");
+	}
 	if (!already_indexed)
 	{
+
+		status_text->SetLabel("The files are being Indexed......");
 		for (auto file : fs::directory_iterator(input_path))
 		{
 			words.clear();
@@ -170,8 +184,7 @@ void mainFrame::on_index_button_clicked(wxCommandEvent &event)
 		my_json_file.open(database_json_file_path, ios::out | std::ofstream::trunc);
 		my_json_file << j;
 		my_json_file.close();
-
-		status_text->SetLabel("Finished Indexing");
+		status_text->SetLabel("Finished Indexing!");
 	}
 }
 
@@ -188,16 +201,33 @@ void mainFrame::on_search_button_clicked(wxCommandEvent &event)
 			status_text->SetLabel("Please enter a word first!");
 		else
 		{
-			map<string, vector<pair<string, int>>> m = read_from_json(data_base_file_name);
-			if (m.find(word) == m.end())
-				result_list->AppendString("There's no results for " + word);
+
+			auto m = myTrie.get_word_stats(word.data());
+			if (m == nullptr)
+			{
+				map<string, vector<pair<string, int>>> mp = read_from_json(data_base_file_name);
+				if (mp.find(word) == mp.end())
+					result_list->AppendString("There's no results for " + word);
+				else
+				{
+					vector<pair<string, int>> result = mp[word];
+					result_list->AppendString("The result of " + word + " is:");
+					for (auto i : result)
+					{
+						string s = to_string(i.second) + " times in " + i.first;
+						result_list->AppendString(s);
+					}
+				}
+			}
+
 			else
 			{
-				vector<pair<string, int>> result = m[word];
 				result_list->AppendString("The result of " + word + " is:");
-				for (auto i : result)
+				for (auto i : *m)
 				{
-					string s = to_string(i.second) + " times in " + i.first;
+					string name = i.first;
+					string num = to_string(i.second);
+					string s = num + " times in " + name;
 					result_list->AppendString(s);
 				}
 			}
