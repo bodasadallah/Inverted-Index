@@ -24,7 +24,7 @@ wxBEGIN_EVENT_TABLE(mainFrame, wxFrame)
 		    EVT_LISTBOX_DCLICK(RESULT_LIST_ID, mainFrame::on_item_clicked)
 			wxEND_EVENT_TABLE()
 
-			    std::string getexepath()
+std::string getexepath()
 {
 	char result[PATH_MAX];
 	ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
