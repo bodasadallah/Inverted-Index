@@ -1,6 +1,8 @@
 # Inverted-Index
 Main purpose of this project is to build an inverted index.
 
+[Here's a vid explaning how the project works](https://drive.google.com/file/d/1LvkUMqrt1PrBx2Z-18eQQ0Qw86rrZ7sd/view?fbclid=IwAR2WG1Y6fdlM4ZsRZh4lPiIQdurVg_gj0EUXGt_IMskaMkVewIQtW7iigVU)
+
 As for now, this application works only on linux systems.You can just run the Inverted-Index.out or Inverted-Index.exe.The app would create "Database" directory in the application directory, and would save the indexing files in it.
 If this folder were indexed before, then the app would use the json file and won't index it again.
 If you want to look at the full database see inputFileName.txt in the Database directory.
@@ -9,6 +11,7 @@ Depenendies
 -----------
 If you want to compile the application you would need these: 
 
+here's a vid explaining how the pro
 * wxWidgets (Follow this guide [here](https://wiki.wxwidgets.org/Installing_and_configuring_under_Ubuntu))
 * json.hpp (this is already included in this repo.)
 
